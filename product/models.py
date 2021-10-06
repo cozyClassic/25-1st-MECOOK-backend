@@ -40,7 +40,11 @@ class Products(Model) :
 class ProductsMainImages(Model) :
     main_image_url  = TextField(null=True)
     product         = ForeignKey('Products', on_delete=CASCADE)
+    created_at  = DateField(auto_now_add=True)
+    updated_at  = DateField(auto_now=True)
 
+    class Meta :
+        db_table = "product_main_images"
 
 class Hashtags(Model) :
     name        = CharField(max_length=40)
