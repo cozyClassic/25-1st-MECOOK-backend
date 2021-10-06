@@ -1,0 +1,65 @@
+id,name,category_id,is_visible,origin_price_KRW,discounted_price_KRW,event_price_KRW,servings_g_peopl,cook_time,detail_top_text,thumbnail_over_url,thumbnail_out_url,detail_HTML,priority,seller_id
+1,진한 우보탕,1,1,5580,0,0,1~2인분,5분,활력 충전\n원기 생생,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+2,진한 얼큰 육개장,1,1,4680,0,0,1~2인분,5분,달아난 입맛도\n붙잡는,https://stimg.emart.com:448/upload/peacock/item/20190628_1922026_008.png,https://stimg.emart.com:448/upload/peacock/item/20180213_1726002_516.png,"<div class=""content-area detail-content template-typeC"" data-sr-id=""1"" style=""visibility: visible;  -webkit-transform: translateY(0) scale(1); opacity: 1;transform: translateY(0) scale(1); opacity: 1;-webkit-transition: -webkit-transform 1.2s cubic-bezier(0.6, 0.2, 0.1, 1) 0.5s, opacity 1.2s cubic-bezier(0.6, 0.2, 0.1, 1) 0.5s; transition: transform 1.2s cubic-bezier(0.6, 0.2, 0.1, 1) 0.5s, opacity 1.2s cubic-bezier(0.6, 0.2, 0.1, 1) 0.5s; "">
+        <article class=""subtitle"">
+          <figcaptrion>
+            <h2>
+              <em>조선시대 궁중에서 사랑받은</em>
+              지혜로운 음식
+            </h2>
+            <p>실한 고기를 결대로 찢어<br>갖은 채소를 곁들인 후<br>얼큰하고 담백하게 끓여내<br>풍부한 영양소를 섭취할 수 있는<br>참 지혜로운 음식</p>
+          </figcaptrion>
+          
+            <figure class=""img1"">
+              <img src=""https://stimg.emart.com:448/upload/peacock/item/20190628_1922026_010.jpg"" alt=""진한 얼큰육개장"" class="" lazyloaded"">
+            </figure>
+          
+        </article>
+        <article class=""maintext"">
+          <figcaptrion>
+            <h3>국내산 안심으로 안심</h3>
+            <p>부드러운 우리 돼지 안심을 사용한<br>건강한 국물 요리</p>
+          </figcaptrion>
+          
+            <figure class=""img2"">
+              <img src=""https://stimg.emart.com:448/upload/peacock/item/20180213_1726003_520.jpg"" alt=""진한 얼큰육개장"" class="" lazyloaded"">
+            </figure>
+          
+          
+            <figure class=""img3"">
+              <img src=""https://stimg.emart.com:448/upload/peacock/item/20180213_1726003_521.jpg"" alt=""진한 얼큰육개장"" class="" lazyloaded"">
+            </figure>
+          
+          
+            <div class=""background"">
+              <img src=""https://stimg.emart.com:448/peacock/img/bg-template-typeC.jpg"" alt="""" class="" lazyloaded"">
+            </div>
+          
+        </article>
+        <article class=""bottomtext"">
+          
+            <figure class=""img4"">
+              <img src=""https://stimg.emart.com:448/upload/peacock/item/20190628_1922026_011.jpg"" alt=""진한 얼큰육개장"" class="" lazyloaded"">
+            </figure>
+          
+        </article>
+      </div>",0,0
+3,전복반계탕,2,1,9000,0,0,1~2인분,1분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+4,녹두삼계탕,2,1,8000,0,0,1~2인분,2분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+5,진한 추어탕,3,1,6000,0,0,1~2인분,3분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+6,시골 장터국,3,1,5000,0,0,1~2인분,1분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+7,얼큰닭개장,4,1,3000,0,0,1~2인분,6분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+8,얼큰한 고추장찌개,4,1,6000,0,0,1~2인분,7분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+9,진한 순두부찌개,5,1,5000,0,0,1~2인분,3분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+10,들깨듬뿍 감자탕맛면,5,1,7000,0,0,1~2인분,5분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+11,제주 흑돈 양념 불고기,6,1,3000,0,0,1~2인분,2분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+12,매운 불족발,6,1,1000,0,0,1~2인분,7분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+13,담백한 편육,7,1,7000,0,0,1~2인분,3분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+14,묵은지 김치전,7,1,4000,0,0,1~2인분,4분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+15,너비아니,8,1,7000,0,0,1~2인분,4분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+16,매콤한 부대볶음,8,1,5000,0,0,1~2인분,3분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+17,안동인 안동찜닭,9,1,3000,0,0,1~2인분,1분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+18,조선호텔 맛김치 1.9kg,9,1,7800,0,0,1~2인분,3분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+19,우리집 오징어 무국,10,1,9000,0,0,1~2인분,2분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+20,고추장 삼겹살,10,1,54000,0,0,1~2인분,1분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
+21,언양식 불고기,1,1,8000,0,0,1~2인분,5분,임시데이터\n임시데이터,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,https://image.shutterstock.com/image-vector/square-pop-web-bunner-250x250-600w-776409511.jpg,1,0,0
