@@ -33,6 +33,8 @@ class OrderItemsStatusCode(models.Model) :
 class OrderItems(models.Model) :
     product     = models.ForeignKey('product.Product')
     order       = models.ForeignKey('Orders')
+    quantity   = models.IntegerField(deafult=1)
+    price       = models.DecimalField(default=0, decimal_places=3, max_digits=10)
     created_at  = models.DateField(auto_now_add=True)
     updated_at  = models.DateField(auto_now=True)
 

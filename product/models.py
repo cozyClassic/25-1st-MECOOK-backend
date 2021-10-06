@@ -18,7 +18,7 @@ class Categories(Model) :
 
 class Products(Model) :
     name                = CharField(max_length=40)
-    categoy             = ForeignKey('Categories', on_delete=CASCADE)
+    category            = ForeignKey('Categories', on_delete=CASCADE)
     is_visible          = BooleanField(default=0)
     origin_price_KRW    = DecimalField(default=0, decimal_places=3, max_digits=10)
     discounted_price_KRW= DecimalField(default=0, decimal_places=3, max_digits=10)
