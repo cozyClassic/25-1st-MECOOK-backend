@@ -1,7 +1,5 @@
-from django.http.response import HttpResponse
-from django.shortcuts   import render
 from django.http        import JsonResponse
-from product.models     import Categories, Products, Hashtags, Menus
+from product.models     import Categories, Products, Menus
 from django.views       import View
 
 # Create your views here.
