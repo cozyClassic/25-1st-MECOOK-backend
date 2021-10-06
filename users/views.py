@@ -32,9 +32,6 @@ class SignupView(View):
                     account      = account,
                     password     = decoded_password,
                     name         = data['name'],
-                    gender       = data['gender'],
-                    nationality  = data['nationality'],
-                    birth_date   = data['birth_date'],
                     phone_number = data['phone_number'],
                     email        = email
                 )
