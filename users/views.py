@@ -1,9 +1,9 @@
 import json, re, bcrypt, jwt
 
-from django.http  import JsonResponse
-from django.views import View
-from .models      import User
-from my_settings  import SECRET_KEY, ALGORITHM
+from django.http      import JsonResponse
+from django.views     import View
+from .models          import User
+from mecook.settings  import SECRET_KEY, ALGORITHM
 
 class SignupView(View):
     def post(self, request):
