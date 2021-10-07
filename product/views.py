@@ -1,7 +1,7 @@
 from django.http        import JsonResponse
-from django.http.response import HttpResponse
-from product.models     import Categories, Products, Hashtags, Menus, ProductAndHashtag
+from product.models     import Categories, Products, Hashtags, Menus, ProductAndHashtag, ProductsMainImages
 from django.views       import View
+from django.db.models   import Q
 
 # Create your views here.
 
@@ -34,28 +34,48 @@ class ListByCategory(View) :
         category_name = Categories.objects.get(id=category_id).name
         result = []
         for i in data :
-            result.append([category_name, i.name, i.cook_time, i.servings_g_people, 0])
+            result.append({
+                "mainImage" : i.thumbnail_out_url,
+                "subImage" : i.thumbnail_over_url,
+                "category" : category_name,
+                "name" : i.name,
+                "cookingTime" : i.cook_time,
+                "serving" : i.servings_g_people,
+                "like" : 0,
+                }
+            )
 
         return JsonResponse({
-            "result" : result
+            "product_list" : [result]
         })
 
 
-#조리시간, 몇인분인지, 카테고리, 좋아요 개수,  해시태그
+# 제품명, 조리시간, 몇인분인지, 카테고리, 좋아요 개수,  해시태그
 
 class DetailByProduct(View) :
     def get(self,reqeust,product_id) :
         products_query = Products.objects.get(id=product_id)
         category_name = Categories.objects.get(id=products_query.category_id).name
-        result = []
-        hashtags = []
+        hashtag_ids = []
         hash_numbers = ProductAndHashtag.objects.filter(product_id=product_id).values_list()
+        image_url_main = ProductsMainImages.objects.get(product_id=product_id).main_image_url
         for i in hash_numbers :
-            hashtags.append(i[2])
+            hashtag_ids.append(i[2])
+        
+        hashtag_names = []
+        for j in hashtag_ids :
+            hashtag_names.append(Hashtags.objects.get(id=j).name)
+        
 
-        result.append([products_query.cook_time, products_query.servings_g_people, category_name, 0])
-        result.append(hashtags)
+        result = {
+            "image" : image_url_main,
+            "category" : category_name,
+            "name" : products_query.name,
+            "cookingTime" : products_query.cook_time,
+            "serving" : products_query.servings_g_people,
+            "hashtag" : hashtag_names
+        }
         
         return JsonResponse({
-            "result" : result
+            "product" : [result],
         })
