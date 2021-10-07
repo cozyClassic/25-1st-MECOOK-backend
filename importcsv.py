@@ -2,13 +2,14 @@ import os
 import django
 import csv
 
-from product.models import * 
-
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mecook.settings")
 django.setup()
 
-CSV_PATH_PRODUCTS = '.csv/menus.csv'
+from product.models import * 
+
+
+CSV_PATH_PRODUCTS = 'csv/menus.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
@@ -17,7 +18,7 @@ with open(CSV_PATH_PRODUCTS) as in_file :
         Menus.objects.create(
             name = row[1])
 
-CSV_PATH_PRODUCTS = '.csv/category.csv'
+CSV_PATH_PRODUCTS = 'csv/category.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
@@ -27,7 +28,7 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             name = row[1],
             menu_id=row[2])
 
-CSV_PATH_PRODUCTS = '.csv/product.csv'
+CSV_PATH_PRODUCTS = 'csv/product.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
@@ -50,7 +51,7 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             seller_id           = row[14],
             )
 
-CSV_PATH_PRODUCTS = '.csv/product_main_image.csv'
+CSV_PATH_PRODUCTS = 'csv/product_main_image.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
@@ -61,7 +62,7 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             product_id      = row[2]
             )
 
-CSV_PATH_PRODUCTS = '.csv/hashtag.csv'
+CSV_PATH_PRODUCTS = 'csv/hashtag.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
@@ -70,7 +71,7 @@ with open(CSV_PATH_PRODUCTS) as in_file :
         Hashtags.objects.create(
             name = row[1])
 
-CSV_PATH_PRODUCTS = '.csv/product_and_hashtag.csv'
+CSV_PATH_PRODUCTS = 'csv/product_and_hashtag.csv'
 
 with open(CSV_PATH_PRODUCTS) as in_file :
     data_reader = csv.reader(in_file)
