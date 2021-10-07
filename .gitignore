@@ -1,4 +1,5 @@
 my_settings.py
+csv/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,visualstudio,vim,linux,zsh
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode,visualstudio,vim,linux,zsh
