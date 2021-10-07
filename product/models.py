@@ -1,10 +1,10 @@
 from django.db.models import Model, CharField, ForeignKey, IntegerField, TextField, DateField, IntegerField, CASCADE,BooleanField, DecimalField
-from pymysql import NULL
 
 # Create your models here.
 
 class Menus(Model) :
     name = CharField(max_length=40)
+
     class Meta : 
         db_table = "menus"
 
@@ -34,14 +34,15 @@ class Products(Model) :
     created_at          = DateField(auto_now_add=True)
     updated_at          = DateField(auto_now=True)
     deleted_at          = DateField(null=True, default=None)
+    
     class Meta :
         db_table= "products"
 
 class ProductsMainImages(Model) :
     main_image_url  = TextField(null=True)
     product         = ForeignKey('Products', on_delete=CASCADE)
-    created_at  = DateField(auto_now_add=True)
-    updated_at  = DateField(auto_now=True)
+    created_at      = DateField(auto_now_add=True)
+    updated_at      = DateField(auto_now=True)
 
     class Meta :
         db_table = "product_main_images"
@@ -55,11 +56,11 @@ class Hashtags(Model) :
         db_table= "hashtags"
 
 
-class ProductAndHashtag(Model) :
+class ProductsHashtag(Model) :
     product     = ForeignKey('Products', on_delete=CASCADE)
     hashtag     = ForeignKey('Hashtags', on_delete=CASCADE)
     created_at  = DateField(auto_now_add=True)
     updated_at  = DateField(auto_now=True)
 
     class Meta :
-        db_table= "product_and_hashtag"
+        db_table= "products_hashtag"

@@ -5,6 +5,11 @@ from django.db.models   import Q
 
 # Create your views here.
 
+
+class MenuList(View) :
+    def get(self,request) :
+        data = list(Menus.objects.all().values_list())
+        return JsonResponse({"result" : data})
 class CategoryList(View) :
     def get(self,request) :
         data = ["카테고리ID", "카테고리명", "메뉴ID"]
