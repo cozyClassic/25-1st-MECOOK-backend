@@ -7,24 +7,29 @@ from django.db.models   import Q
 
 class CategoryList(View) :
     def get(self,request) :
-        data = list(Categories.objects.all().values_list())
+        data = ["카테고리ID", "카테고리명", "메뉴ID"]
+        data.append(list(Categories.objects.all().values_list()))
+        
         return JsonResponse({"result" : data})
 
 class ProductList(View) :
     def get(self,request) :
-        data = list(Products.objects.all().values_list())
+        data = [["상품ID", "상품명", "카테고리ID", "원래가격", "할인가격", "이벤트가격", "용량/인분", "조리시간","메인텍스트","썸네일_마우스오버","썸네일_마우스아웃","상세페이지","진열순위","판매자ID","생성일","수정일","삭제일"]]
+        data.append(list(Products.objects.all().values_list()))
         return JsonResponse({"result" : data})
 
 
 class MenuList(View) :
     def get(self,request) :
-        data = list(Menus.objects.all().values_list())
+        data = ["메뉴ID, 메뉴명"]
+        data.append(list(Menus.objects.all().values_list()))
         return JsonResponse({"result" : data})
 
 
 class MenuByCategory(View) :
     def get(self,request,category_id) :
-        data = list(Products.objects.filter(category_id=category_id).values_list())
+        data = [["상품ID", "상품명", "카테고리ID", "원래가격", "할인가격", "이벤트가격", "용량/인분", "조리시간","메인텍스트","썸네일_마우스오버","썸네일_마우스아웃","상세페이지","진열순위","판매자ID","생성일","수정일","삭제일"]]
+        data.append(list(Products.objects.filter(category_id=category_id).values_list()))
         return JsonResponse({"result" : data})
 
 # 카테고리, 메뉴이름, 조리시간, 몇인분인지, 좋아요 개수
@@ -46,7 +51,7 @@ class ListByCategory(View) :
             )
 
         return JsonResponse({
-            "product_list" : [result]
+            "result" : [result]
         })
 
 
@@ -77,5 +82,5 @@ class DetailByProduct(View) :
         }
         
         return JsonResponse({
-            "product" : [result],
+            "result" : [result],
         })
