@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views      import LikeView
+from .views      import LikeView, AllLikeView
 
 urlpatterns = [
-        path('like', LikeView.as_view()),
+        path('user/like', LikeView.as_view()),
+        path('public/like', AllLikeView.as_view())
 ]

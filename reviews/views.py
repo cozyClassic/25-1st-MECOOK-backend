@@ -1,0 +1,44 @@
+import json
+
+from django.http           import JsonResponse
+from django.views          import View
+from .models               import Reviews
+from product.models        import Products
+from users.utils           import login_decorator
+
+class ReviewView(View):
+    @login_decorator
+    def post(self, request):
+        try:    
+            data        = json.loads(request.body)
+            user        = request.user
+            product = Products.objects.get(id=data['product'])
+
+            Reviews.objects.create(
+                    user    = user,
+                    product = product,
+                    review  = data['review'],
+            )
+            return JsonResponse({'return': 'posted'}, status=201)
+
+        except Products.DoesNotExist:
+            return JsonResponse({'message': 'item_does_not_exist'}, status=404)
+
+        except KeyError:
+            return JsonResponse({'message': 'key_error'}, status=400)
+    
+    def get(self, request):
+        ret          = []
+        review_list = Reviews.objects.all()
+
+        for review in review_list:
+            ret.append({
+                'review_id': review.id,
+                'review': review.review,
+                # 'product': Products.objects.get(id=review.product_id).name,
+                'product': review.product.name, 
+                # 'user': User.objects.get(id=review.user_id).account
+                'user': review.user.account
+            })
+
+        return JsonResponse({'review_by_product': ret}, status=201)
