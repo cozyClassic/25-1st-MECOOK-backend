@@ -1,5 +1,5 @@
 from django.http        import JsonResponse
-from product.models     import Categories, Products, Hashtags, Menus, ProductsHashtag, ProductsMainImages
+from product.models     import Categories, Products, Hashtags, Menus, ProductsHashtag, ProductsMainImages, ProductDetailAttrs
 from django.views       import View
 from django.db.models   import Q
 
@@ -76,15 +76,23 @@ class DetailByProduct(View) :
     def get(self,reqeust,product_id) :
         products = Products.objects.select_related('category').get(id=product_id) #1
         hashtag_ids = []
-        hash_numbers = ProductsHashtag.objects.filter(product_id=product_id).values_list()
+        hash_numbers = ProductsHashtag.objects.filter(product_id=product_id).select_related()
         image_url_main = ProductsMainImages.objects.get(product_id=product_id).main_image_url
+        detail_attrs = ProductDetailAttrs.objects.filter(product_id=product_id)
+        detail = []
+        for i in detail_attrs : 
+            detail.append({
+            "text" : i.text,
+            "image_url" : i.image_url,
+            "priority" : i.priority,
+            })
+
         for i in hash_numbers :
             hashtag_ids.append(i[2])
         
         hashtag_names = []
         for j in hashtag_ids :
             hashtag_names.append(Hashtags.objects.get(id=j).name)
-
 
         result = {
             "image"         : image_url_main,
@@ -97,6 +105,7 @@ class DetailByProduct(View) :
         
         return JsonResponse({
             "result" : [result],
+            "detail" : detail
         })
 
 
@@ -124,3 +133,9 @@ class TestView(View) :
         return JsonResponse({
             "result" : [result],
         })
+
+
+class ProductDetailComponent(View) :
+    def get(self,request,product_id) :
+        ProductDetailAttrs.objects.filter(product_id=product_id)
+        return JsonResponse({"result" : ["HI!"]})
