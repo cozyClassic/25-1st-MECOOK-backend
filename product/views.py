@@ -1,7 +1,9 @@
 from django.http        import JsonResponse
+from django.http.response import HttpResponse
 from product.models     import Categories, Products, Hashtags, Menus, ProductsHashtag, ProductsMainImages, ProductDetailAttrs
+from likes.models       import Like
 from django.views       import View
-from django.db.models   import Q
+from django.db.models   import Q, Count
 
 # Create your views here.
 
@@ -74,33 +76,25 @@ class ListByCategory(View) :
 # 제품명, 조리시간, 몇인분인지, 카테고리, 좋아요 개수,  해시태그
 class DetailByProduct(View) :
     def get(self,reqeust,product_id) :
-        products = Products.objects.select_related('category').get(id=product_id) #1
-        hashtag_ids = []
-        hash_numbers = ProductsHashtag.objects.filter(product_id=product_id).select_related()
-        image_url_main = ProductsMainImages.objects.get(product_id=product_id).main_image_url
-        detail_attrs = ProductDetailAttrs.objects.filter(product_id=product_id)
-        detail = []
-        for i in detail_attrs : 
-            detail.append({
+        products = Products.objects.select_related('category'
+        ).prefetch_related('product_main_images'
+        ).prefetch_related('products_hashtag'
+        ).prefetch_related('product_detail_attrs'
+        ).get(id=product_id) #1
+        hash_numbers = [x[0] for x in list(products.products_hashtag.values_list('hashtag_id'))]
+        detail = [{
             "text" : i.text,
             "image_url" : i.image_url,
             "priority" : i.priority,
-            })
-
-        for i in hash_numbers :
-            hashtag_ids.append(i[2])
+            } for i in products.product_detail_attrs.filter(product_id=product_id)]
         
-        hashtag_names = []
-        for j in hashtag_ids :
-            hashtag_names.append(Hashtags.objects.get(id=j).name)
+        hash_names = [x[0] for x in list(Hashtags.objects.filter(id__in=hash_numbers).values_list('name'))]
 
         result = {
-            "image"         : image_url_main,
+            "image"         : products.product_main_images.values("main_image_url").get(product_id=product_id)["main_image_url"],
             "category"      : products.category.name, #1
             "name"          : products.name,
-            "cookingTime"   : products.cook_time,
-            "serving"       : products.servings_g_people,
-            "hashtag"       : hashtag_names
+            "hashtag"       : hash_names
         }
         
         return JsonResponse({
@@ -111,27 +105,35 @@ class DetailByProduct(View) :
 
 class TestView(View) :
     def get(self,reqeust,product_id) :
-        products = Products.objects.select_related('category').get(id=product_id) #1
-        hashtag_ids = []
-        hash_numbers = ProductsHashtag.objects.filter(product_id=product_id).values_list()
-        image_url_main = ProductsMainImages.objects.get(product_id=product_id).main_image_url
-        for i in hash_numbers :
-            hashtag_ids.append(i[2])
-        
-        hashtag_names = Hashtags.objects.filter(id__in=hash_numbers)
+        products = Products.objects.select_related('category'
+        ).prefetch_related('product_main_images'
+        ).prefetch_related('products_hashtag'
+        ).prefetch_related('product_detail_attrs'
+        ).get(id=product_id) #1
 
+        likes = Like.objects.filter(product_id=product_id).count()
+        
+
+        hash_numbers = [x[0] for x in list(products.products_hashtag.values_list('hashtag_id'))]
+        detail = [{
+            "text" : i.text,
+            "image_url" : i.image_url,
+            "priority" : i.priority,
+            } for i in products.product_detail_attrs.filter(product_id=product_id)]
+        
+        hash_names = [x[0] for x in list(Hashtags.objects.filter(id__in=hash_numbers).values_list('name'))]
 
         result = {
-            "image"         : image_url_main,
+            "image"         : products.product_main_images.values("main_image_url").get(product_id=product_id)["main_image_url"],
             "category"      : products.category.name, #1
             "name"          : products.name,
-            "cookingTime"   : products.cook_time,
-            "serving"       : products.servings_g_people,
-            "hashtag"       : [hashtag_names]
+            "likes"         : likes,
+            "hashtag"       : hash_names
         }
         
         return JsonResponse({
             "result" : [result],
+            "detail" : detail
         })
 
 

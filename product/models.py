@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, ForeignKey, IntegerField, TextField, DateField, IntegerField, CASCADE,BooleanField, DecimalField, Prefetch, DateTimeField
+from django.db.models import Model, CharField, ForeignKey, IntegerField, TextField, DateField, IntegerField, CASCADE,BooleanField, DecimalField
 
 # Create your models here.
 
@@ -10,7 +10,7 @@ class Menus(Model) :
 
 class Categories(Model) :
     name = CharField(max_length=40)
-    menu = ForeignKey('Menus', on_delete=CASCADE)
+    menu = ForeignKey('Menus', on_delete=CASCADE, related_name='categories')
 
     class Meta :
         db_table = "categories"
@@ -18,7 +18,7 @@ class Categories(Model) :
 
 class Products(Model) :
     name                = CharField(max_length=40)
-    category            = ForeignKey('Categories', on_delete=CASCADE)
+    category            = ForeignKey('Categories', on_delete=CASCADE, related_name='products')
     is_visible          = BooleanField(default=0)
     origin_price_KRW    = DecimalField(default=0, decimal_places=3, max_digits=10)
     discounted_price_KRW= DecimalField(default=0, decimal_places=3, max_digits=10)
@@ -40,7 +40,7 @@ class Products(Model) :
 
 class ProductsMainImages(Model) :
     main_image_url  = TextField(null=True)
-    product         = ForeignKey('Products', on_delete=CASCADE, related_name='products_main_images')
+    product         = ForeignKey('Products', on_delete=CASCADE, related_name='product_main_images')
     created_at      = DateField(auto_now_add=True)
     updated_at      = DateField(auto_now=True)
 
@@ -57,7 +57,7 @@ class Hashtags(Model) :
 
 
 class ProductsHashtag(Model) :
-    product     = ForeignKey('Products', on_delete=CASCADE)
+    product     = ForeignKey('Products', on_delete=CASCADE, related_name='products_hashtag')
     hashtag     = ForeignKey('Hashtags', on_delete=CASCADE)
     created_at  = DateField(auto_now_add=True)
     updated_at  = DateField(auto_now=True)
@@ -69,7 +69,7 @@ class ProductsHashtag(Model) :
 class ProductDetailAttrs(Model) :
     text        = CharField(max_length=100, null=True)
     image_url   = TextField(null=True)
-    product     = ForeignKey('Products', on_delete=CASCADE)
+    product     = ForeignKey('Products', on_delete=CASCADE, related_name='product_detail_attrs')
     priority    = IntegerField(default=0)    
     created_at  = DateField(auto_now_add=True)
     updated_at  = DateField(auto_now=True)
