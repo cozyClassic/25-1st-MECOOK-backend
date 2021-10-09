@@ -189,7 +189,8 @@ class ListByLike(View) :
 #
 class TestView(View) :
     def get(self,request,category_id) :
-
+        
+        # AccessToken이 있는 경우에만 체크를 하기 위해 데코레이터를 내부로 호출함
         @login_decorator
         def get_user_id(self,request) :
             return request.user.id
@@ -198,9 +199,13 @@ class TestView(View) :
         product_lists = []
         for i in data :
             product_lists.append(i.id)
+
+        # 좋아요 테이블에서, 우리가 보여줄 목록에 있는 상품이 들어있는 모든 좋아요 데이터를 가져와서 Counter 사용
         likes = list(Like.objects.filter(product_id__in=product_lists).values_list())
         likes_list = Counter([x[1] for x in likes])
         like_boolean = []
+
+        # AccessToken이 있는 경우에, Like 테이블에서 해당 사용자가 좋아요를 누른 상품 리스트를 찾음.
         if 'Authorization' in request.headers :
             user_id = get_user_id(self,request)
             like_boolean = [x[2] for x in list(Like.objects.filter(user_id =user_id, product_id__in=product_lists).values_list())]
@@ -208,18 +213,18 @@ class TestView(View) :
         result = []
         for i in data :
             result.append({
-                "id"            : i.id,
-                "mainImage"     : i.thumbnail_out_url,
-                "subImage"      : i.thumbnail_over_url,
-                "category"      : i.category.name,
-                "name"          : i.name,
-                "cookingTime"   : i.cook_time,
-                "serving"       : i.servings_g_people,
-                "like"          : likes_list[i.id],
+                # "id"            : i.id,
+                # "mainImage"     : i.thumbnail_out_url,
+                # "subImage"      : i.thumbnail_over_url,
+                # "category"      : i.category.name,
+                # "name"          : i.name,
+                # "cookingTime"   : i.cook_time,
+                # "serving"       : i.servings_g_people,
+                # "like"          : likes_list[i.id],
                 "this_user_like": int(i.id in like_boolean),
                 "product_lists" : product_lists,                
                 }
-            ) 
+            )
         
 
         return JsonResponse({
