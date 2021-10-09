@@ -51,3 +51,4 @@ class AllLikeView(View):
             })
 
         return JsonResponse({'like_by_product': ret}, status=201)
+        
