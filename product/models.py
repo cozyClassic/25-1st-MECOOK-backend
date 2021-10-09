@@ -64,3 +64,14 @@ class ProductsHashtag(Model) :
 
     class Meta :
         db_table= "products_hashtag"
+
+class ProductDetailAttrs(Model) :
+    text        = CharField(max_length=100, null=True)
+    image_url   = TextField(null=True)
+    product     = ForeignKey('Products', on_delete=CASCADE, related_name='product_detail_attrs')
+    priority    = IntegerField(default=0)    
+    created_at  = DateField(auto_now_add=True)
+    updated_at  = DateField(auto_now=True)
+
+    class Meta :
+        db_table= "product_detail_attrs"

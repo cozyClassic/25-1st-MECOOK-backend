@@ -32,7 +32,7 @@ class SignupView(View):
                     account      = account,
                     password     = decoded_password,
                     name         = data['name'],
-                    phone_number = data['phone_number'],
+                    # phone_number = data['phone_number'],
                     email        = email
                 )
 

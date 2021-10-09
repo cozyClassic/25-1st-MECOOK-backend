@@ -27,18 +27,35 @@ class ReviewView(View):
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
     
-    def get(self, request):
-        ret          = []
-        review_list = Reviews.objects.all()
+# class GetReviewView(View):
+#     def get(self, request):
+#         ret          = []
+#         review_list = Reviews.objects.all()
 
-        for review in review_list:
-            ret.append({
-                'review_id': review.id,
-                'review': review.review,
-                # 'product': Products.objects.get(id=review.product_id).name,
-                'product': review.product.name, 
-                # 'user': User.objects.get(id=review.user_id).account
-                'user': review.user.account
-            })
+#         for review in review_list:
+#             ret.append({
+#                 'review_id': review.id,
+#                 'review': review.review,
+#                 # 'product': Products.objects.get(id=review.product_id).name,
+#                 'product': review.product.name, 
+#                 # 'user': User.objects.get(id=review.user_id).account
+#                 'user': review.user.account
+#             })
 
-        return JsonResponse({'review_by_product': ret}, status=201)
+#         return JsonResponse({'review_by_product': ret}, status=201)
+
+class GetReviewView(View):
+
+    def get(self, request,product_id):
+            review_by_product = Reviews.objects.filter(product_id=product_id)
+            ret = []
+
+            for review in review_by_product:
+                ret.append({
+                    'review_id': review.id,
+                    'review'   : review.review,
+                    'product'  : review.product.name,
+                    'user'     : review.user.account
+                })
+
+            return JsonResponse({'review_by_product': ret}, status=201)
