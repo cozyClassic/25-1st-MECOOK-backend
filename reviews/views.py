@@ -46,7 +46,7 @@ class ReviewView(View):
 
 class GetReviewView(View):
 
-    def get(self, request,product_id):
+    def get(self, request, product_id):
             review_by_product = Reviews.objects.filter(product_id=product_id)
             ret = []
 
@@ -59,3 +59,17 @@ class GetReviewView(View):
                 })
 
             return JsonResponse({'review_by_product': ret}, status=201)
+
+class EditReviewView(View):
+    @login_decorator
+    def delete(self, request, review_id):
+        authorized_user = request.user
+        review = Reviews.objects.get(id=review_id)
+        user = review.user
+        if authorized_user == user:
+            review.delete()
+            return JsonResponse({'message': 'deleted'}, status=204)
+        else:
+            return JsonResponse({'message': 'not_allowed'}, status=400)
+
+        
