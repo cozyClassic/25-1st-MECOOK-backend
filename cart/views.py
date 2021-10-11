@@ -30,7 +30,8 @@ class CartView(View):
                 'product_name': item.product.name,
                 'category': item.product.category.name,
                 'quantity': item.quantity,
-                'user': item.user.name
+                'user': item.user.name,
+                'id': item.id
             })
 
         return JsonResponse({'cart_info': ret}, status=200)
