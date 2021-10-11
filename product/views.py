@@ -66,8 +66,8 @@ class ListByCategory(View) :
             product_lists.append(i.id)
 
         # 좋아요 테이블에서, 우리가 보여줄 목록에 있는 상품이 들어있는 모든 좋아요 데이터를 가져와서 Counter 사용
-        likes = list(Like.objects.filter(product_id__in=product_lists).values_list())
-        likes_list = Counter([x[1] for x in likes])
+        likes = list(Like.objects.filter(product_id__in=product_lists).values_list('product_id'))
+        likes_list = Counter([x[0] for x in likes])
         like_boolean = []
 
         # AccessToken이 있는 경우에, Like 테이블에서 해당 사용자가 좋아요를 누른 상품 리스트를 찾음.
