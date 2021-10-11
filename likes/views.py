@@ -40,14 +40,15 @@ class LikeView(View):
         return JsonResponse({'user': user_liked_products}, status=201)
 
 class AllLikeView(View):
-    def get(self, request):
-        ret          = []
-        product_list = Products.objects.all()
+    def get(self, request, product_id):
+        # ret          = []
+        # product_list = Products.objects.all()
 
-        for product in product_list:
-            ret.append({
-                'product_id': product.id,
-                'count': Like.objects.filter(product=product.id).count()
-            })
+        # for product in product_list:
+        #     ret.append({
+        #         'product_id': product.id,
+        #         'count': Like.objects.filter(product=product.id).count()
+        #     })
+        count = Like.objects.filter(product=product_id).count()
 
-        return JsonResponse({'like_by_product': ret}, status=201)
+        return JsonResponse({'like_by_product': count}, status=201)

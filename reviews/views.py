@@ -2,11 +2,13 @@ import json
 
 from django.http           import JsonResponse
 from django.views          import View
+from django.db             import transaction
 from .models               import Reviews
 from product.models        import Products
 from users.utils           import login_decorator
 
 class ReviewView(View):
+    @transaction.atomic
     @login_decorator
     def post(self, request):
         try:    
