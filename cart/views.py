@@ -28,6 +28,8 @@ class CartView(View):
         for item in user_cart:
             ret.append({
                 'product_name': item.product.name,
+                'price': item.product.origin_price_KRW,
+                'image': item.product.thumbnail_over_url,
                 'category': item.product.category.name,
                 'quantity': item.quantity,
                 'user': item.user.name,
@@ -35,3 +37,14 @@ class CartView(View):
             })
 
         return JsonResponse({'cart_info': ret}, status=200)
+    
+    @login_decorator
+    def delete(self, request, cart_id):
+        authorized_user = request.user
+        cart = Carts.objects.get(id=cart_id)
+        user = cart.users
+        if authorized_user == user:
+            cart.delete()
+            return JsonResponse({'message': 'deleted'}, status=204)
+        else:
+            return JsonResponse({'message': 'not_allowed'}, status=400)
