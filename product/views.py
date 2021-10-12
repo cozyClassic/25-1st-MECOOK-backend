@@ -4,6 +4,7 @@ from likes.models       import Like
 from django.views       import View
 from users.utils        import login_decorator
 from collections        import Counter
+import json
 
 
 class ListByCategory(View) :
@@ -56,7 +57,7 @@ class DetailByProduct(View) :
         ).prefetch_related('products_hashtag'
         ).prefetch_related('product_detail_attrs'
         ).prefetch_related('like_by_product'
-        ).filter(id=product_id)[0]
+        ).get(id=product_id)
 
         likes = products.like_by_product.count()
         
@@ -90,29 +91,29 @@ class DetailByProduct(View) :
 
 # 카테고리 기준으로 상품리스트 반환하는것과 거의 동일하지만, 카테고리 기준이 아닌 좋아요가 높은 숫자의 상품을 반환하도록 되어 있음.
 class ListByLike(View) :
-    def get(self,request,**kwrgs) :
+    def get(self,request) :
 
         @login_decorator
         def get_user_id(self,request) :
             return request.user.id
 
-        likes           = Like.objects.all()
-        likes2          = sorted(list(Counter([like.product_id for like in likes]).items()), key=lambda x : x[1], reverse=True)[:6]
-        product_lists   = Products.objects.filter(id__in=[x[0] for x in likes2])
+        likes_query     = Like.objects.all()
+        likes_list      = sorted(list(Counter([like.product_id for like in likes_query]).items()), key=lambda x : x[1], reverse=True)[:6]
+        product_lists   = Products.objects.filter(id__in=[x[0] for x in likes_list])
         idx             = 0
         like_boolean    = []
         result          = []
 
         if 'Authorization' in request.headers :
             user_id         = get_user_id(self,request)
-            like_boolean    = [like.product_id for like in likes if like.user_id == user_id and like.product_id in product_lists]
+            like_boolean    = [like.product_id for like in likes_query if like.user_id == user_id and like.product_id in product_lists]
 
         
         for i in product_lists :
             result.append({
                 "id"            : i.id,
                 "name"          : i.name,
-                "like"          : likes2[idx][1],
+                "like"          : likes_list[idx][1],
                 "this_user_like": int(i.id in like_boolean)
                 }
             )
@@ -125,37 +126,14 @@ class ListByLike(View) :
 
 
 class testView(View) :
-    def get(self,request,**kwrgs) :
-
-        @login_decorator
-        def get_user_id(self,request) :
-            return request.user.id
-
-        likes           = Like.objects.all()
-        likes2          = sorted(list(Counter([like.product_id for like in likes]).items()), key=lambda x : x[1], reverse=True)[:6]
-        product_lists   = Products.objects.filter(id__in=[x[0] for x in likes2])
-        idx             = 0
-        like_boolean    = []
-        result          = []
-
-        if 'Authorization' in request.headers :
-            user_id         = get_user_id(self,request)
-            like_boolean    = [like.product_id for like in likes if like.user_id == user_id and like.product_id in product_lists]
-
-        
-        for i in product_lists :
-            result.append({
-                "id"            : i.id,
-                "name"          : i.name,
-                "like"          : likes2[idx][1],
-                "this_user_like": int(i.id in like_boolean)
-                }
-            )
-            idx+=1
-        
+    def post(self,request) :
+        result = []
+        result = json.loads(request.body)["keyword"]
+        for i in result :
+            print(i)
 
         return JsonResponse({
-            "result" : result
+            "result" : list(result)
         })
 
 
