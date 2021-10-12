@@ -15,13 +15,13 @@ class ListByCategory(View) :
 
         data            = Products.objects.select_related('category').filter(category_id=category_id).prefetch_related('like_by_product')
         product_lists   = [x.id for x in data]
-        likes           = Like.objects.filter(product_id__in=product_lists).values_list('product_id', 'user_id').all()
-        likes_list      = Counter([x["product_id"] for x in list(likes.values('product_id'))])
+        likes           = Like.objects.filter(product_id__in=product_lists).all()
+        likes_list      = Counter([x.product_id for x in likes.all()])
         like_boolean    = []
 
         if 'Authorization' in request.headers :
             user_id         = get_user_id(self,request)
-            like_boolean    = [x["product_id"] for x in list(likes.filter(user_id =user_id).values('product_id'))]
+            like_boolean    = [like.product_id for like in likes.all() if like.user_id==user_id]
 
         result = []
         for i in data :
@@ -56,7 +56,7 @@ class DetailByProduct(View) :
         ).prefetch_related('products_hashtag'
         ).prefetch_related('product_detail_attrs'
         ).prefetch_related('like_by_product'
-        ).get(id=product_id)
+        ).filter(id=product_id)[0]
 
         likes = products.like_by_product.count()
         
@@ -66,12 +66,11 @@ class DetailByProduct(View) :
             "text"      : i.text,
             "image_url" : i.image_url,
             "priority"  : i.priority,
-            } for i in products.product_detail_attrs.filter(product_id=product_id)]
-        
+            } for i in [attr for attr in products.product_detail_attrs.all() if attr.product_id==product_id]]
         
 
         result = {
-            "image"     : products.product_main_images.values("main_image_url").get(product_id=product_id)["main_image_url"],
+            "image"     : products.product_main_images.get(product_id=product_id).main_image_url,
             "category"  : products.category.name,
             "name"      : products.name,
             "likes"     : likes,
@@ -80,7 +79,7 @@ class DetailByProduct(View) :
         
         if 'Authorization' in request.headers :
             user_id                     = get_user_id(self,request)
-            like_boolean                = products.like_by_product.filter(product_id=product_id, user_id =user_id).exists()
+            like_boolean                = bool([like for like in products.like_by_product.all() if like.user_id==user_id])
             result["this_user_like"]    = int(like_boolean)
 
         return JsonResponse({
@@ -91,36 +90,64 @@ class DetailByProduct(View) :
 
 # 카테고리 기준으로 상품리스트 반환하는것과 거의 동일하지만, 카테고리 기준이 아닌 좋아요가 높은 숫자의 상품을 반환하도록 되어 있음.
 class ListByLike(View) :
-    def get(self,request,*args) :
+    def get(self,request,**kwrgs) :
 
         @login_decorator
         def get_user_id(self,request) :
             return request.user.id
 
-        likes           = Like.objects.values('product_id').all()
-        likes2          = sorted(list(Counter([x["product_id"] for x in list(likes)]).items()), key=lambda x : x[1], reverse=True)[:6] 
-        top6            = [x[0] for x in likes2]
-        likes_lists     = [x[1] for x in likes2]
-        product_lists   = Products.objects.filter(id__in =top6)
+        likes           = Like.objects.all()
+        likes2          = sorted(list(Counter([like.product_id for like in likes]).items()), key=lambda x : x[1], reverse=True)[:6]
+        product_lists   = Products.objects.filter(id__in=[x[0] for x in likes2])
         idx             = 0
         like_boolean    = []
         result          = []
 
         if 'Authorization' in request.headers :
             user_id         = get_user_id(self,request)
-            like_boolean    = [x['product_id'] for x in list(likes.filter(user_id =user_id, product_id__in=product_lists).values('product_id'))]
+            like_boolean    = [like.product_id for like in likes if like.user_id == user_id and like.product_id in product_lists]
 
         
         for i in product_lists :
             result.append({
                 "id"            : i.id,
-                "mainImage"     : i.thumbnail_out_url,
-                "subImage"      : i.thumbnail_over_url,
-                "category"      : i.category.name,
                 "name"          : i.name,
-                "cookingTime"   : i.cook_time,
-                "serving"       : i.servings_g_people,
-                "like"          : likes_lists[idx],
+                "like"          : likes2[idx][1],
+                "this_user_like": int(i.id in like_boolean)
+                }
+            )
+            idx+=1
+        
+
+        return JsonResponse({
+            "result" : result
+        })
+
+
+class testView(View) :
+    def get(self,request,**kwrgs) :
+
+        @login_decorator
+        def get_user_id(self,request) :
+            return request.user.id
+
+        likes           = Like.objects.all()
+        likes2          = sorted(list(Counter([like.product_id for like in likes]).items()), key=lambda x : x[1], reverse=True)[:6]
+        product_lists   = Products.objects.filter(id__in=[x[0] for x in likes2])
+        idx             = 0
+        like_boolean    = []
+        result          = []
+
+        if 'Authorization' in request.headers :
+            user_id         = get_user_id(self,request)
+            like_boolean    = [like.product_id for like in likes if like.user_id == user_id and like.product_id in product_lists]
+
+        
+        for i in product_lists :
+            result.append({
+                "id"            : i.id,
+                "name"          : i.name,
+                "like"          : likes2[idx][1],
                 "this_user_like": int(i.id in like_boolean)
                 }
             )
@@ -184,4 +211,14 @@ class ProductByCategory(View) :
         data.append(list(Products.objects.filter(category_id=category_id).values_list()))
 
         return JsonResponse({"result" : data})
+
+list = [(1,3),(4,5),(6,7)]
+list2 = [1,4,6]
+list = [3,5,7]
+
+for x in list :
+    a,b = x
+
+list2 = [x[0] for x in list]
+list3 = [x[1] for x in list]
 """
