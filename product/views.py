@@ -4,7 +4,6 @@ from likes.models       import Like
 from django.views       import View
 from users.utils        import login_decorator
 from collections        import Counter
-import json
 
 
 class ListByCategory(View) :
@@ -123,80 +122,3 @@ class ListByLike(View) :
         return JsonResponse({
             "result" : result
         })
-
-
-class testView(View) :
-    def post(self,request) :
-        result = []
-        result = json.loads(request.body)["keyword"]
-        for i in result :
-            print(i)
-
-        return JsonResponse({
-            "result" : list(result)
-        })
-
-
-"""
-class LoginSample(View) :
-    def get(self,request,product_id) :
-        @login_decorator
-        def user_id(self,request) :
-            return request.user.id
-
-        if 'Authorization' in request.headers :
-            result = user_id(self,request)
-            return HttpResponse(result)
-        else : 
-            return HttpResponse("No JWT")
-
-class MenuRaw(View) :
-    def get(self,request) :
-        data = ["메뉴ID, 메뉴명"]
-        data.append(list(Menus.objects.all().values_list()))
-
-        return JsonResponse({"result" : data})
-
-
-class CategoryRaw(View) :
-    def get(self,request) :
-        data = ["카테고리ID", "카테고리명", "메뉴ID"]
-        data.append(list(Categories.objects.all().values_list()))
-        
-        return JsonResponse({"result" : data})
-
-
-class ProductRaw(View) :
-    def get(self,request) :
-        data = [["상품ID", "상품명", "카테고리ID", "원래가격", "할인가격", "이벤트가격", "용량/인분", "조리시간","메인텍스트",
-        "썸네일_마우스오버","썸네일_마우스아웃","상세페이지","진열순위","판매자ID","생성일","수정일","삭제일"]]
-        data.append(list(Products.objects.all().values_list()))
-
-        return JsonResponse({"result" : data})
-
-class CategoryByMenu(View) :
-    def get(self,reqeust,menu_id) :
-        data = ["카테고리ID", "카테고리명", "메뉴ID"]
-        data.append(list(Categories.objects.filter(menu_id=menu_id).values_list()))
-
-        return JsonResponse({"result" : data})
-
-
-class ProductByCategory(View) :
-    def get(self,request,category_id) :
-        data = [["상품ID", "상품명", "카테고리ID", "원래가격", "할인가격", "이벤트가격", "용량/인분", "조리시간","메인텍스트",
-        "썸네일_마우스오버","썸네일_마우스아웃","상세페이지","진열순위","판매자ID","생성일","수정일","삭제일"]]
-        data.append(list(Products.objects.filter(category_id=category_id).values_list()))
-
-        return JsonResponse({"result" : data})
-
-list = [(1,3),(4,5),(6,7)]
-list2 = [1,4,6]
-list = [3,5,7]
-
-for x in list :
-    a,b = x
-
-list2 = [x[0] for x in list]
-list3 = [x[1] for x in list]
-"""
