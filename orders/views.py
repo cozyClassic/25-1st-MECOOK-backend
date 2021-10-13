@@ -20,17 +20,20 @@ class OrderView(View):
 
     @login_decorator
     def get(self, request):
-        user = request.user
-        items = Carts.objects.filter(user=user)
+        try:
+            user  = request.user
+            items = Carts.objects.filter(user=user)
+            total = 0
+            
+            for item in items:
+                a      = int(item.product.origin_price_KRW)
+                b      = item.quantity
+                total += a * b
 
-        total = 0
-        for item in items:
-            a = int(item.product.origin_price_KRW)
-            b = item.quantity
-            total += a * b
-        print(total)
+            user.points -= total
+            user.save()
+            items.delete()
 
-        user.points -= total
-        user.save()
-
-        return JsonResponse({'message': 'point_off'}, status=201)
+            return JsonResponse({'message': 'point_off'}, status=201)
+        except KeyError:
+            return JsonResponse({'message': 'key_error'}, status=400)
