@@ -212,7 +212,7 @@ class testView(View) :
         
         return JsonResponse({
             "result" : result
-        }, status=200)
+        })
 
 """
 class LoginSample(View) :
