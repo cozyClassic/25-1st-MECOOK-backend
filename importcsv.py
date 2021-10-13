@@ -7,6 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mecook.settings")
 django.setup()
 
 from product.models import * 
+from orders.models  import OrderStatus
 
 
 CSV_PATH_PRODUCTS = 'csv/menus.csv'
@@ -81,3 +82,13 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             product_id = row[1],
             hashtag_id = row[2]
             )
+
+CSV_PATH_PRODUCTS = 'csv/order_status.csv'
+
+with open(CSV_PATH_PRODUCTS) as in_file :
+    data_reader = csv.reader(in_file)
+    next(data_reader, None)
+    for row in data_reader:
+        OrderStatus.objects.create(
+            order_status = row[1]
+        )
