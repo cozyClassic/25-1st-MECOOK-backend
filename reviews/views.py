@@ -1,4 +1,5 @@
 import json
+from django.core import paginator
 
 from django.http           import JsonResponse
 from django.views          import View
@@ -29,23 +30,22 @@ class ReviewView(View):
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
 
-class GetReviewView(View):
-
     def get(self, request, product_id):
-            review_by_product = Reviews.objects.filter(product_id=product_id)
-            ret = []
+            offset = int(request.GET.get('offset', 0)) 
+            limit  = int(request.GET.get('limit', 0))
 
-            for review in review_by_product:
-                ret.append({
-                    'review_id': review.id,
+            review_by_product = Reviews.objects.filter(product_id=product_id)[offset:offset+limit]
+
+            if limit-offset > 20 :
+                return JsonResponse({'message':'too much lists'}, status=400)
+
+            ret = [{'review_id': review.id,
                     'review'   : review.review,
                     'product'  : review.product.name,
-                    'user'     : review.user.account
-                })
+                    'user'     : review.user.account} for review in review_by_product]
 
             return JsonResponse({'review_by_product': ret}, status=201)
 
-class EditReviewView(View):
     @login_decorator
     def delete(self, request, review_id):
         authorized_user = request.user
