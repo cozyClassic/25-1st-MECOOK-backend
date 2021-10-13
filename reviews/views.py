@@ -28,13 +28,15 @@ class ReviewView(View):
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
 
-    def get(self, request, product_id):
+    def get(self, request):
         try:
-            sort   = request.GET.get('sort', '-created_at')
-            offset = int(request.GET.get('offset', 0)) 
-            limit  = int(request.GET.get('limit', 0))
+            product_id = int(request.GET.get('product', 0))
+            sort       = request.GET.get('sort', '-created_at')
+            offset     = int(request.GET.get('offset', 0)) 
+            limit      = int(request.GET.get('limit', 0))
 
             review_by_product = Review.objects.filter(product_id=product_id).order_by(sort)[offset:offset+limit]
+            
             ret = [{
                 'review_id': review.id,
                 'review'   : review.review,
@@ -53,15 +55,9 @@ class ReviewView(View):
     @login_decorator
     def delete(self, request, review_id):
         try:
-            auth_user = request.user
-            review    = Review.objects.get(id=review_id)
-            user      = review.users()
+            Review.objects.get(id=review_id, user=request.user).delete()
 
-            if auth_user == user:
-                review.delete()
-                return JsonResponse({'message': 'deleted'}, status=204)
-
-            return JsonResponse({'message': 'unauthorized_user'}, status=400)
+            return JsonResponse({'message': 'deleted'}, status=204)
 
         except Review.DoesNotExist:
             return JsonResponse({'message': 'message_does_not_exist'}, status=404)
