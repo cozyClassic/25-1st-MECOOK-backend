@@ -6,17 +6,17 @@ from users.utils        import login_decorator
 from collections        import Counter
 
 
-class ListByCategory(View) :
+class ProrductListView(View) :
     def get(self,request,category_id) :
 
         @login_decorator
         def get_user_id(self,request) :
             return request.user.id
 
-        data            = Products.objects.select_related('category').filter(category_id=category_id).prefetch_related('like_by_product')
-        product_lists   = [x.id for x in data]
-        likes           = Like.objects.filter(product_id__in=product_lists).all()
-        likes_list      = Counter([x.product_id for x in likes.all()])
+        products        = Products.objects.select_related('category').filter(category_id=category_id).prefetch_related('like_by_product')
+        product_lists   = [x.id for x in products]
+        likes           = Like.objects.filter(product_id__in=product_lists)
+        likes_list      = Counter([x.product_id for x in likes])
         like_boolean    = []
 
         if 'Authorization' in request.headers :
@@ -24,7 +24,7 @@ class ListByCategory(View) :
             like_boolean    = [like.product_id for like in likes.all() if like.user_id==user_id]
 
         result = []
-        for i in data :
+        for i in products :
             result.append({
                 "id"            : i.id,
                 "mainImage"     : i.thumbnail_out_url,
@@ -38,9 +38,7 @@ class ListByCategory(View) :
                 }
             )
         
-        return JsonResponse({
-            "result" : result
-        })
+        return JsonResponse({"result" : result})
 
 
 class DetailByProduct(View) :
@@ -115,6 +113,4 @@ class ListByLike(View) :
             )
             idx+=1
 
-        return JsonResponse({
-            "result" : result
-        })
+        return JsonResponse({"result" : result})
