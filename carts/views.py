@@ -2,6 +2,7 @@ import json
 
 from django.http           import JsonResponse
 from django.views          import View
+
 from .models               import Carts
 from product.models        import Products
 from users.utils           import login_decorator
@@ -9,42 +10,52 @@ from users.utils           import login_decorator
 class CartView(View):
     @login_decorator
     def post(self, request):
-        data = json.loads(request.body)
-        user = request.user
+        try:
+            data = json.loads(request.body)
+            user = request.user
 
-        Carts.objects.create(
-            user = user,
-            product = Products.objects.get(id=data['product']),
-            quantity = data['quantity']
-        )
-        return JsonResponse({'message': 'added_to_cart'}, status=201)
+            Carts.objects.create(
+                user     = user,
+                product  = Products.objects.get(id=data['product']),
+                quantity = data['quantity']
+            )
+            return JsonResponse({'message': 'added_to_cart'}, status=201)
+
+        except KeyError:
+            return JsonResponse({'message': 'key_error'}, status=401)
+
+        except Products.DoesNotExist:
+            return JsonResponse({'message': 'item_does_not_exit'}, status=404)
 
     @login_decorator
     def get(self, request):
-        user = request.user
-        user_cart = Carts.objects.filter(user=user)
-        ret = []
+        try:
+            user = request.user
+            cart = Carts.objects.filter(user=user)
+            ret  = [{
+                    'product_name': item.product.name,
+                    'price': item.product.origin_price_KRW,
+                    'image': item.product.thumbnail_over_url,
+                    'category': item.product.category.name,
+                    'quantity': item.quantity,
+                    'user': item.user.name,
+                    'id': item.id
+                }for item in cart]
 
-        for item in user_cart:
-            ret.append({
-                'product_name': item.product.name,
-                'price': item.product.origin_price_KRW,
-                'image': item.product.thumbnail_over_url,
-                'category': item.product.category.name,
-                'quantity': item.quantity,
-                'user': item.user.name,
-                'id': item.id
-            })
+            return JsonResponse({'cart_info': ret}, status=200)
 
-        return JsonResponse({'cart_info': ret}, status=200)
+        except KeyError:
+            return JsonResponse({'message': 'key_error'}, status=401)
     
     @login_decorator
     def delete(self, request, cart_id):
-        authorized_user = request.user
-        cart = Carts.objects.get(id=cart_id)
-        user = cart.users
-        if authorized_user == user:
+        try:
+            cart = Carts.objects.get(id=cart_id)
             cart.delete()
             return JsonResponse({'message': 'deleted'}, status=204)
-        else:
-            return JsonResponse({'message': 'not_allowed'}, status=400)
+
+        except Carts.DoesNotExist:
+            return JsonResponse({'message': 'nothing_to_delete'}, status=404)
+
+        except KeyError:
+            return JsonResponse({'message': 'key_error'}, status=401)
