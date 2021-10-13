@@ -3,7 +3,7 @@ import json
 from django.http           import JsonResponse
 from django.views          import View
 
-from .models               import Reviews
+from .models               import Review
 from product.models        import Products
 from users.utils           import login_decorator
 
@@ -15,7 +15,7 @@ class ReviewView(View):
             user        = request.user
             product     = Products.objects.get(id=data['product'])
 
-            Reviews.objects.create(
+            Review.objects.create(
                     user    = user,
                     product = product,
                     review  = data['review'],
@@ -34,15 +34,17 @@ class ReviewView(View):
             offset = int(request.GET.get('offset', 0)) 
             limit  = int(request.GET.get('limit', 0))
 
-            review_by_product = Reviews.objects.filter(product_id=product_id).order_by(sort)[offset:offset+limit]
-            ret = [{'review_id': review.id,
-                    'review'   : review.review,
-                    'product'  : review.product.name,
-                    'user'     : review.user.account} for review in review_by_product]
+            review_by_product = Review.objects.filter(product_id=product_id).order_by(sort)[offset:offset+limit]
+            ret = [{
+                'review_id': review.id,
+                'review'   : review.review,
+                'product'  : review.product.name,
+                'user'     : review.user.account
+                } for review in review_by_product]
 
-            return JsonResponse({'review_by_product': ret}, status=201)
+            return JsonResponse({'review_by_product': ret}, status=200)
 
-        except Reviews.DoesNotExist:
+        except Review.DoesNotExist:
             return JsonResponse({'message': 'review_does_not_exits'}, status=404)
 
         except KeyError:
@@ -51,11 +53,17 @@ class ReviewView(View):
     @login_decorator
     def delete(self, request, review_id):
         try:
-            review = Reviews.objects.get(id=review_id)
-            review.delete()
-            return JsonResponse({'message': 'deleted'}, status=204)
-        
-        except Reviews.DoesNotExist:
+            auth_user = request.user
+            review    = Review.objects.get(id=review_id)
+            user      = review.users()
+
+            if auth_user == user:
+                review.delete()
+                return JsonResponse({'message': 'deleted'}, status=204)
+
+            return JsonResponse({'message': 'unauthorized_user'}, status=400)
+
+        except Review.DoesNotExist:
             return JsonResponse({'message': 'message_does_not_exist'}, status=404)
 
         except KeyError:

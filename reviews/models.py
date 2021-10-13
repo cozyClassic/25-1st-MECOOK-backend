@@ -1,6 +1,6 @@
 from django.db import models
 
-class Reviews(models.Model):
+class Review(models.Model):
     user        = models.ForeignKey('users.User', on_delete=models.CASCADE)
     product     = models.ForeignKey('product.Products', on_delete=models.CASCADE)
     review      = models.CharField(max_length=100)
