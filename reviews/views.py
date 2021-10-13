@@ -32,10 +32,9 @@ class ReviewView(View):
         try:
             sort   = request.GET.get('sort', '-created_at')
             offset = int(request.GET.get('offset', 0)) 
-            limit  = int(request.GET.get('limit', 5))
+            limit  = int(request.GET.get('limit', 0))
 
             review_by_product = Reviews.objects.filter(product_id=product_id).order_by(sort)[offset:offset+limit]
-
             ret = [{'review_id': review.id,
                     'review'   : review.review,
                     'product'  : review.product.name,
