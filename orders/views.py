@@ -2,11 +2,9 @@ import json
 
 from django.http           import JsonResponse
 from django.views          import View
-from django.db.models      import Q
 
 from .models               import *
 from carts.models          import Carts
-from users.models          import User
 from users.utils           import login_decorator
 
 class OrderView(View):
