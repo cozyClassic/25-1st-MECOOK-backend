@@ -20,7 +20,7 @@ class ListByCategory(View) :
 
         data            = Products.objects.select_related('category').filter(category_id=category_id).prefetch_related('like_by_product')
         product_lists   = [x.id for x in data]
-        likes           = data[0].like_by_product.filter(product_id__in=product_lists)
+        likes           = Like.objects.filter(product_id__in=product_lists)
         likes_list      = Counter([x.product_id for x in likes])
         like_boolean    = []
 
@@ -143,6 +143,7 @@ class ListByKeyword(View) :
                 'message': 'keyword does not exist'
             }, status=200)
         search_words = json.loads(request.body)["keyword"]
+        print(search_words)
         products_all_query = Products.objects.all()
         hashtags_all_query = Hashtags.objects.all()
         product_id_set = set()
@@ -191,27 +192,13 @@ class ListByKeyword(View) :
 class testView(View) :
     def get(self,request) :
 
-        data            = Products.objects.select_related('category').filter(category_id=category_id).prefetch_related('like_by_product')
-        product_lists   = [x.id for x in data]
-        likes           = Like.objects.filter(product_id__in=product_lists).all()
-        likes_list      = Counter([x.product_id for x in likes.all()])
-
-        result = []
-        for i in data :
-            result.append({
-                "id"            : i.id,
-                "mainImage"     : i.thumbnail_out_url,
-                "subImage"      : i.thumbnail_over_url,
-                "category"      : i.category.name,
-                "name"          : i.name,
-                "cookingTime"   : i.cook_time,
-                "serving"       : i.servings_g_people,
-                "like"          : likes_list[i.id],
-                }
-            )
+        product_queryset= Products.objects.select_related('category').all()
+        key_querys = request.GET
+        for i in key_querys :
+            print(key_querys[i])
         
         return JsonResponse({
-            "result" : result
+            "result" : []
         })
 
 """
