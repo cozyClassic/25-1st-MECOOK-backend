@@ -1,9 +1,7 @@
-from django.test import TestCase
-from collections import Counter
-# Create your tests here.
-test = [(1,),(1,),(1,),(2,)]
+import re
+test = set()
 
-test2= Counter(test)
+for i in [1,2,3,4,5,1] :
+    test.add(i)
 
-print(test2)
-
+print(test)
