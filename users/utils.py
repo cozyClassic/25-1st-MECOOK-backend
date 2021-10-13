@@ -11,6 +11,7 @@ def login_decorator(func):
             payload = jwt.decode(access_token, SECRET_KEY, ALGORITHM)
             login_user = User.objects.get(id=payload['id'])
             request.user = login_user
+            user_id = login_user.id
         
         except jwt.DecodeError:
             return JsonResponse({'MESSAGE': 'invalid_token'}, status=401)
