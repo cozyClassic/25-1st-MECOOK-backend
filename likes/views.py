@@ -17,18 +17,18 @@ class LikeView(View):
 
             if Like.objects.filter(user=user, product=product).exists():
                 Like.objects.filter(user=user, product=product).delete()
-                return JsonResponse({"message" : "success"}, status=204)
+                return JsonResponse({"message" : "success", "like_count": Like.objects.filter(product=product_id).count()}, status=204)
                 
             else:
                 Like.objects.create(
                     user    = user,
                     product = product
                 )
-                return JsonResponse({'message': 'like_success'}, status=201)
+                return JsonResponse({'message': 'like_success', "like_count": Like.objects.filter(product=product_id).count()}, status=201)
         
         except Products.DoesNotExist:
             return JsonResponse({'message': 'item_does_not_exist'}, status=404)
-
+            
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
 
@@ -40,15 +40,7 @@ class LikeView(View):
         return JsonResponse({'user': user_liked_products}, status=201)
 
 class AllLikeView(View):
-    def get(self, request):
-        ret          = []
-        product_list = Products.objects.all()
+    def get(self, request, product_id):
+        count = Like.objects.filter(product=product_id).count()
 
-        for product in product_list:
-            ret.append({
-                'product_id': product.id,
-                'count': Like.objects.filter(product=product.id).count()
-            })
-
-        return JsonResponse({'like_by_product': ret}, status=201)
-        
+        return JsonResponse({'like_by_product': count}, status=201)
