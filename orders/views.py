@@ -21,9 +21,9 @@ class OrderView(View):
                     a      = int(item.product.origin_price_KRW)
                     b      = item.quantity
                     total += a * b
+                    item.delete()
             user.points -= total
             user.save()
-            items.delete()
 
             return JsonResponse({'message': 'point_off'}, status=201)
 
