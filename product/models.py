@@ -57,8 +57,8 @@ class Hashtags(Model) :
 
 
 class ProductsHashtag(Model) :
-    product     = ForeignKey('Products', on_delete=CASCADE, related_name='products_hashtag')
-    hashtag     = ForeignKey('Hashtags', on_delete=CASCADE)
+    product     = ForeignKey('Products', on_delete=CASCADE, related_name='products_by_hashtag')
+    hashtag     = ForeignKey('Hashtags', on_delete=CASCADE, related_name='hashtag_by_products')
     created_at  = DateField(auto_now_add=True)
     updated_at  = DateField(auto_now=True)
 
