@@ -14,16 +14,12 @@ class LikeView(View):
             user       = request.user
             product_id = data['product']
             product    = Products.objects.get(id=product_id)
-
-            if Like.objects.filter(user=user, product=product).exists():
-                Like.objects.filter(user=user, product=product).delete()
+            
+            obj, created = Like.objects.get_or_create(user=user, product=product)
+            if created==False:
+                obj.delete()
                 return JsonResponse({"message" : "success", "like_count": Like.objects.filter(product=product_id).count()}, status=204)
-                
             else:
-                Like.objects.create(
-                    user    = user,
-                    product = product
-                )
                 return JsonResponse({'message': 'like_success', "like_count": Like.objects.filter(product=product_id).count()}, status=201)
         
         except Products.DoesNotExist:
