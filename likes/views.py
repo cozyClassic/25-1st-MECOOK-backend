@@ -27,16 +27,3 @@ class LikeView(View):
             
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
-
-    @login_decorator
-    def get(self, request):
-        user                = request.user
-        user_liked_products = list(Like.objects.filter(user=user).values())
-
-        return JsonResponse({'user': user_liked_products}, status=201)
-
-class AllLikeView(View):
-    def get(self, request, product_id):
-        count = Like.objects.filter(product=product_id).count()
-
-        return JsonResponse({'like_by_product': count}, status=201)
