@@ -6,6 +6,20 @@ import csv
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mecook.settings")
 django.setup()
 
+from product.models import ProductDetailAttrs
+CSV_PATH_PRODUCTS = 'csv/product_detail_attrs.csv'
+
+with open(CSV_PATH_PRODUCTS) as in_file :
+    data_reader = csv.reader(in_file)
+    next(data_reader, None)
+    for row in data_reader :
+        ProductDetailAttrs.objects.create(
+            text = row[1],
+            image_url = row[2],
+            priority = row[3],
+            product_id=row[4]
+            )
+"""
 from likes.models import Like
 
 CSV_PATH_PRODUCTS = 'csv/likes.csv'
@@ -20,19 +34,8 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             )
 
 
-"""
-CSV_PATH_PRODUCTS = 'csv/product_detail_attrs.csv'
 
-with open(CSV_PATH_PRODUCTS) as in_file :
-    data_reader = csv.reader(in_file)
-    next(data_reader, None)
-    for row in data_reader :
-        ProductDetailAttrs.objects.create(
-            text = row[1],
-            image_url = row[2],
-            priority = row[3],
-            product_id=row[4]
-            )
+
 
 
 CSV_PATH_PRODUCTS = 'csv/menus.csv'
