@@ -24,7 +24,7 @@ class LikeView(View):
         
         except Products.DoesNotExist:
             return JsonResponse({'message': 'item_does_not_exist'}, status=404)
-
+            
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
 

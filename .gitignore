@@ -1,8 +1,12 @@
 my_settings.py
 csv/
-
+*.csv
+.csv
+my_settings_ec2.py
 # Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,visualstudio,vim,linux,zsh
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode,visualstudio,vim,linux,zsh
+
+# DB 공유용 csv파일 무시
 
 ### Linux ###
 *~

@@ -7,6 +7,37 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mecook.settings")
 django.setup()
 
 from product.models import * 
+from orders.models  import OrderStatus
+
+CSV_PATH_PRODUCTS = 'csv/product_detail_attrs.csv'
+
+with open(CSV_PATH_PRODUCTS) as in_file :
+    data_reader = csv.reader(in_file)
+    next(data_reader, None)
+    for row in data_reader :
+        ProductDetailAttrs.objects.create(
+            text = row[1],
+            image_url = row[2],
+            priority = row[3],
+            product_id=row[4]
+            )
+"""
+from likes.models import Like
+
+CSV_PATH_PRODUCTS = 'csv/likes.csv'
+
+with open(CSV_PATH_PRODUCTS) as in_file :
+    data_reader = csv.reader(in_file)
+    next(data_reader, None)
+    for row in data_reader :
+        Like.objects.create(
+            product_id = row[0],
+            user_id = row[1]
+            )
+
+
+
+
 
 
 CSV_PATH_PRODUCTS = 'csv/menus.csv'
@@ -81,3 +112,14 @@ with open(CSV_PATH_PRODUCTS) as in_file :
             product_id = row[1],
             hashtag_id = row[2]
             )
+
+CSV_PATH_PRODUCTS = 'csv/order_status.csv'
+
+with open(CSV_PATH_PRODUCTS) as in_file :
+    data_reader = csv.reader(in_file)
+    next(data_reader, None)
+    for row in data_reader:
+        OrderStatus.objects.create(
+            order_status = row[1]
+        )
+"""

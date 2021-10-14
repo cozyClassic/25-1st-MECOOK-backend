@@ -19,9 +19,6 @@ class SignupView(View):
             if not re.match('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}', password):
                 return JsonResponse({'MESSAGE' : 'invalid_password_format'}, status=400)
 
-            if User.objects.filter(account = account).exists():
-                return JsonResponse({'MESSAGE': 'existing_id'}, status=400)
-            
             if User.objects.filter(email = email).exists():
                 return JsonResponse({'MESSAGE': 'email_occupied'}, status=400)
 
@@ -39,6 +36,14 @@ class SignupView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE': 'key_error'}, status=400)
+
+class CheckView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        account = data['account']
+        if User.objects.filter(account = account).exists():
+            return JsonResponse({'MESSAGE': 'existing_id'}, status=400)
+        return JsonResponse({'MESSAGE': 'succcess'}, status=201)
 
 class LoginView(View):
     def post(self, request):
