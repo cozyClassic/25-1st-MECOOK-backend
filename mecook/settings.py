@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'product',
     'likes',
+    'reviews',
     'carts'
 ]
 
