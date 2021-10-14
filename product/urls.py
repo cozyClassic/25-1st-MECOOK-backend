@@ -6,5 +6,5 @@ urlpatterns = [
     path('/menu/<int:category_id>/navbar', ListByCategory.as_view()),
     path('/menu/category/<int:product_id>/detail', DetailByProduct.as_view()),
     path('/search', ListByKeyword.as_view()),
-    path('/test/1/', testView.as_view()),
+    path('/', testView.as_view()),
 ]

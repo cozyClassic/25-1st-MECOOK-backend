@@ -1,13 +1,14 @@
 import json
 import re
-
 from django.http        import JsonResponse
 from django.http.response import HttpResponse
-from product.models     import Products, Hashtags, ProductsHashtag
+from product.models     import Products, Hashtags, ProductsHashtag, ProductDetailAttrs
 from likes.models       import Like
 from django.views       import View
 from users.utils        import login_decorator
 from collections        import Counter
+from django.db          import connection
+from django.db.models   import Q
 
 
 
@@ -190,15 +191,89 @@ class ListByKeyword(View) :
         }, status=200)
 
 class testView(View) :
-    def get(self,request) :
+    def get(self,request) :       
+        # 프론트에 보낼 데이터 짝맞추기 용
+        keyword_dicts = {
+            'id'            : 'id',
+            'name'          : 'name',
+            'thumbImg'      : 'thumbnail_out_url',
+            'thumbImgHover' : 'thumbnail_over_url', 
+            'cookingTime'   : 'cook_time', 
+            'serving'       : 'servings_g_people', 
+            'category'      : 'category__name',
+            'priority'      : 'priority'
+            }
 
-        product_queryset= Products.objects.select_related('category').all()
-        key_querys = request.GET
-        for i in key_querys :
-            print(key_querys[i])
+        product_queryset= Products.objects.select_related('category').values(*[keyword_dicts[key] for key in keyword_dicts])
+        key_querys      = request.GET
+        result          = []
+
+        # url_query_parameters = {"product","category","search", "sort","start","limit",,"detail"}
+        if "product" in key_querys :
+            product_queryset = product_queryset.filter(id=key_querys["product"])
+
+        if "category" in key_querys :
+            product_queryset = product_queryset.filter(category_id=key_querys["category"])
         
+        if "search" in key_querys :
+            q_hashtag = Q()
+            q_produt  = Q()
+            hash_names_query = ProductsHashtag.objects.select_related('hashtag').values('hashtag__name','product_id')
+
+            for keyword in request.GET.getlist("search") :
+                q_hashtag.add(Q(hashtag__name__icontains=keyword), q_hashtag.OR)
+                q_produt.add(Q(name__icontains=keyword), q_produt.OR)
+                
+            hashtag_id_list = [mid["product_id"] for mid in hash_names_query.filter(q_hashtag)]   
+            q_produt.add(Q(id__in=hashtag_id_list), q_produt.OR)
+            product_queryset = product_queryset.filter(q_produt)
+                
+        if "sort" in key_querys :
+            sort_keyword = ["id","name", "priority"]
+            if key_querys["sort"] in sort_keyword :
+                product_queryset = product_queryset.order_by(key_querys["sort"])
+
+        if "start" in key_querys :
+            product_queryset = product_queryset[int(key_querys["start"]):int(key_querys["start"])+20]
+
+        if "limit" in key_querys :
+            product_queryset = product_queryset[:int(key_querys["limit"])]
+
+
+        product_id_list = [product["id"] for product in product_queryset]
+        likes           = Like.objects.filter(product_id__in=product_id_list)
+        likes_list      = Counter([like.product_id for like in likes])
+
+        if "detail" in key_querys and key_querys["detail"] == "1" :
+            keyword_dicts['mainImg']    = 'product_main_images__main_image_url'
+            keyword_dicts['mainImgKey'] = 'product_main_images__product_id'
+            product_queryset            = product_queryset.prefetch_related('product_main_images').values(*[keyword_dicts[key] for key in keyword_dicts])
+            hash_names_query            = ProductsHashtag.objects.filter(product_id__in=product_id_list).select_related('hashtag').values('hashtag__name','product_id')
+            detail_attrs_query          = ProductDetailAttrs.objects.filter(product_id__in=product_id_list)
+   
+        # 최대 20개로 제한 주기로 함
+        for product in product_queryset[:20] :
+            curr = {}
+
+            for keys in keyword_dicts :
+                curr[keys]   = product[keyword_dicts[keys]]
+                curr["like"] = likes_list[product["id"]]
+
+            if "detail" in key_querys and key_querys["detail"] == "1" :
+                curr["hashtag"] = [hash['hashtag__name'] for hash in hash_names_query if hash["product_id"] == product["id"]]
+                curr["mainImg"] = product["product_main_images__main_image_url"]
+                curr["detail"]  = [{
+                 "text"      : attrs.text,
+                 "priority"  : attrs.priority,
+                 "imgDetail" : attrs.image_url
+                } for attrs in detail_attrs_query if attrs.product_id == product["id"]]
+
+            result.append(curr)
+
+        print(connection.queries)
+
         return JsonResponse({
-            "result" : []
+            "result" : result
         })
 
 """
