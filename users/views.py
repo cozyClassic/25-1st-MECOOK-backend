@@ -19,9 +19,6 @@ class SignupView(View):
             if not re.match('^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}', password):
                 return JsonResponse({'MESSAGE' : 'invalid_password_format'}, status=400)
 
-            if User.objects.filter(account = account).exists():
-                return JsonResponse({'MESSAGE': 'existing_id'}, status=400)
-            
             if User.objects.filter(email = email).exists():
                 return JsonResponse({'MESSAGE': 'email_occupied'}, status=400)
 
@@ -32,7 +29,6 @@ class SignupView(View):
                     account      = account,
                     password     = decoded_password,
                     name         = data['name'],
-                    phone_number = data['phone_number'],
                     email        = email
                 )
 
@@ -40,6 +36,14 @@ class SignupView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE': 'key_error'}, status=400)
+
+class CheckView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        account = data['account']
+        if User.objects.filter(account = account).exists():
+            return JsonResponse({'MESSAGE': 'existing_id'}, status=400)
+        return JsonResponse({'MESSAGE': 'succcess'}, status=201)
 
 class LoginView(View):
     def post(self, request):
@@ -57,8 +61,13 @@ class LoginView(View):
                 return JsonResponse({'MESSAGE': 'invalid_password'}, status = 400)
             
             access_token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm=ALGORITHM)
+            ret = [
+                user.name,
+                user.points,
+                access_token
+            ]
 
-            return JsonResponse({'TOKEN': access_token}, status=200)
+            return JsonResponse({'message': ret}, status=200)
 
         except KeyError:
             return JsonResponse({'MESSAGE': 'key_error'}, status=400)
