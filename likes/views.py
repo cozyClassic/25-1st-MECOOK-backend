@@ -10,14 +10,14 @@ class LikeView(View):
     @login_decorator
     def post(self, request):
         try:
-            data       = json.loads(request.body)
-            user       = request.user
-            product_id = data['product']
-            product    = Products.objects.get(id=product_id)
+            data          = json.loads(request.body)
+            user          = request.user
+            product_id    = data['product']
+            product       = Products.objects.get(id=product_id)
+            like, created = Like.objects.get_or_create(user=user, product=product)
             
-            obj, created = Like.objects.get_or_create(user=user, product=product)
-            if created==False:
-                obj.delete()
+            if not created:
+                like.delete()
                 return JsonResponse({"message" : "success", "like_count": Like.objects.filter(product=product_id).count()}, status=204)
             else:
                 return JsonResponse({'message': 'like_success', "like_count": Like.objects.filter(product=product_id).count()}, status=201)
