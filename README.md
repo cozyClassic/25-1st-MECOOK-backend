@@ -31,7 +31,7 @@
 * 상품 즐겨찾기(좋아요) 생성, 삭제 API (POST)
 * 주문 (포인트 차감 기능만) API (POST, GET)
 
-##Endpoint
+## Endpoint
 * POST/user/signup (회원가입)
 * POST/user/login (로그인)
 * POST/cart (장바구니 넣기)
