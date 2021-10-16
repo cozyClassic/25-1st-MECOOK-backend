@@ -10,37 +10,20 @@ class LikeView(View):
     @login_decorator
     def post(self, request):
         try:
-            data       = json.loads(request.body)
-            user       = request.user
-            product_id = data['product']
-            product    = Products.objects.get(id=product_id)
-
-            if Like.objects.filter(user=user, product=product).exists():
-                Like.objects.filter(user=user, product=product).delete()
+            data          = json.loads(request.body)
+            user          = request.user
+            product_id    = data['product']
+            product       = Products.objects.get(id=product_id)
+            like, created = Like.objects.get_or_create(user=user, product=product)
+            
+            if not created:
+                like.delete()
                 return JsonResponse({"message" : "success", "like_count": Like.objects.filter(product=product_id).count()}, status=204)
-                
             else:
-                Like.objects.create(
-                    user    = user,
-                    product = product
-                )
                 return JsonResponse({'message': 'like_success', "like_count": Like.objects.filter(product=product_id).count()}, status=201)
-        
+                
         except Products.DoesNotExist:
             return JsonResponse({'message': 'item_does_not_exist'}, status=404)
             
         except KeyError:
             return JsonResponse({'message': 'key_error'}, status=400)
-
-    @login_decorator
-    def get(self, request):
-        user                = request.user
-        user_liked_products = list(Like.objects.filter(user=user).values())
-
-        return JsonResponse({'user': user_liked_products}, status=201)
-
-class AllLikeView(View):
-    def get(self, request, product_id):
-        count = Like.objects.filter(product=product_id).count()
-
-        return JsonResponse({'like_by_product': count}, status=201)
