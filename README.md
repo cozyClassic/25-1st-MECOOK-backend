@@ -19,10 +19,10 @@
 
 ## Features
 **김민찬**
-* 상품 리스트 API (``get``)
-* 상품 상세보기 API (``get``)
-* 상품 리스트 검색, 정렬 API(``get``)
-* 로그인 시 좋아요 여부 표시 (``get``)
+* 상품 리스트 API (``GET``)
+* 상품 상세보기 API (``GET``)
+* 상품 리스트 검색, 정렬 API(``GET``)
+* 로그인 시 좋아요 여부 표시 (``GET``)
 * 전체 URL 쿼리 파라미터 사용
 
 **김도훈**
@@ -43,3 +43,5 @@
 * ``DELETE``/review/ccomment<int:review_id> (리뷰 삭제할때)
 * ``POST``/like/user (좋아요 누를때)
 * ``GET``/order (주문 누르기후 포인트 차감)
+* ``GET``/product/?$product=${상품ID}&category=${카테고리ID}&detail=${상세보기표시여부(1,0}&search=${검색 단어1}&search=${검색 단어2}&sort=${priority|id|name 정렬기준}
+  -> query Param의 모든 조건은 선택사항임
